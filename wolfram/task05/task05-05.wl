@@ -1,0 +1,1 @@
+flatlst = {arrmy_List :> Flatten[arrmy]}

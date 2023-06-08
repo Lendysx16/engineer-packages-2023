@@ -1,0 +1,1 @@
+func2[n_ /; IntegerQ[n] && Positive[n]] := If[EvenQ[n], n/2, 3 n + 1]

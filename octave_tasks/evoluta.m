@@ -1,26 +1,36 @@
-function evoluta(x, y, t)
-    x_values = x(t);
-    y_values = y(t);
+function evoluta(x = @(t) 4*cos(t), y = @(t) 5*sin(t), start_t = 0, end_t = 20*pi, step = 0.01)
+    pkg load symbolic;
 
-    dx_dt = gradient(x_values, t);
-    dy_dt = gradient(y_values, t);
-    d2x_dt2 = gradient(dx_dt, t);
-    d2y_dt2 = gradient(dy_dt, t);
+    x = sym(x);
+    y = sym(y);
+    dx_dt = diff(x);
+    dy_dt = diff(y);
+    d2x_dt2 = diff(dx_dt);
+    d2y_dt2 = diff(dy_dt);
 
-	K = (dx_dt .^ 2 + dy_dt .^ 2) ./ (dx_dt .* d2y_dt2 - d2x_dt2 .* dy_dt);
-    X = x_values - K .* dy_dt;
-    Y = y_values + K .* dx_dt;
-    figure;
-    
-    plot(x_values, y_values, 'b', 'LineWidth', 2);
-    hold on;
-    
-    plot(X, Y, 'r--', 'LineWidth', 2);
-    xlim([t(1)-100 t(end)+100]);
-    ylim([min(y_values)- 50 max(y_values) + 50]);
-    hold off;
+	  K = (dx_dt ^ 2 + dy_dt ^ 2) / (dx_dt * d2y_dt2 - d2x_dt2 * dy_dt);
+    X = x - K * dy_dt;
+    Y = y + K * dx_dt;
+
+    X = function_handle(X);
+
+    Y = function_handle(Y);
+
+    t = start_t:step:end_t;
+
+    X = X(t);
+    Y = Y(t);
+    h = plot(X(1:10), Y(1:10));
+    axis equal;
+    xlim([min(X) - 5, max(X) + 5]);
+    ylim([min(Y)- 5, max(Y) + 5]);
+    for k = 1:1:length(X)
+      set(h, 'XData', X(1:k), 'YData', Y(1:k));
+      pause(0.01);
+      drawnow;
+    endfor
 
     xlabel('x');
     ylabel('y');
-	axis equal;
+	  axis equal;
 end

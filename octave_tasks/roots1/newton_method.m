@@ -16,7 +16,7 @@ function newton_method(f, a, b)
 
         while (abs(xn - xprev) > eps)
             xprev = xn;
-            dfdx = (f(xn + dx) - f(xn)) / dx;
+            dfdx = (f(xn + dx) - f(xn - dx)) / dx / 2;
             xn = xn - (f(xn) / dfdx);
         end
 
